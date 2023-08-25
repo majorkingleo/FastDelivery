@@ -1,6 +1,6 @@
 /**
+ * FastDelivery
  * @author Copyright (c) 2023 Martin Oberzalek
- *
  */
 
 #ifndef FASTDELIVERY_H_
@@ -100,139 +100,139 @@ public:
 
 template <size_t N>
 class StaticNodeList {
- public:
-  typedef typename std::array<NodeListEntry, N>::value_type value_type;
-  typedef typename std::array<NodeListEntry, N>::reference reference;
-  typedef typename std::array<NodeListEntry, N>::const_reference const_reference;
-  typedef typename std::array<NodeListEntry, N>::size_type size_type;
+public:
+	typedef typename std::array<NodeListEntry, N>::value_type value_type;
+	typedef typename std::array<NodeListEntry, N>::reference reference;
+	typedef typename std::array<NodeListEntry, N>::const_reference const_reference;
+	typedef typename std::array<NodeListEntry, N>::size_type size_type;
 
-  static constexpr size_t npos = N;
+	static constexpr size_t npos = N;
 
-  class iterator
-  {
-  private:
-	  StaticNodeList<N> * data = nullptr;
-	  size_t pos = 0;
+	class iterator
+	{
+	private:
+		StaticNodeList<N> * data = nullptr;
+		size_t pos = 0;
 
-  public:
-	  iterator( StaticNodeList<N> * data_, size_t pos_ )
-	  : data( data_ ),
-		pos( pos_ )
-	  {}
+	public:
+		iterator( StaticNodeList<N> * data_, size_t pos_ )
+		: data( data_ ),
+		  pos( pos_ )
+		{}
 
-	  bool operator!=( const iterator & other_it ) const {
-		  if( pos == other_it.pos ) {
-			  return false;
-		  }
+		bool operator!=( const iterator & other_it ) const {
+			if( pos == other_it.pos ) {
+				return false;
+			}
 
-		  return true;
-	  }
+			return true;
+		}
 
-	  NodeListEntry & operator*() {
-		  return data->at(pos);
-	  }
+		NodeListEntry & operator*() {
+			return data->at(pos);
+		}
 
-	  const NodeListEntry & operator*() const {
-		  return data->at(pos);
-	  }
+		const NodeListEntry & operator*() const {
+			return data->at(pos);
+		}
 
-	  iterator & operator++() {
-		  pos++;
-		  return *this;
-	  }
+		iterator & operator++() {
+			pos++;
+			return *this;
+		}
 
-	  iterator & operator--() {
-		  pos--;
-		  return *this;
-	  }
-  };
+		iterator & operator--() {
+			pos--;
+			return *this;
+		}
+	};
 
- public:
+public:
 
-  ~StaticNodeList() {
-  	while (size()) {
-  	  pop_front();
-  	}
-  }
+	~StaticNodeList() {
+		while (size()) {
+			pop_front();
+		}
+	}
 
-  void push_back(const NodeListEntry& v) {
-    if (size_ + 1 > N) {
-      throw;
-    }
-    new (&array_[(front_ + size_) % N]) NodeListEntry(v);
-    ++size_;
-  }
+	void push_back(const NodeListEntry& v) {
+		if (size_ + 1 > N) {
+			throw;
+		}
+		new (&array_[(front_ + size_) % N]) NodeListEntry(v);
+		++size_;
+	}
 
-  void push_back(const NodeListEntry& v, bool discard_front ) {
-    if (size_ + 1 > N) {
-    	pop_front();
-    }
-    new (&array_[(front_ + size_) % N]) NodeListEntry(v);
-    ++size_;
-  }
+	void push_back(const NodeListEntry& v, bool discard_front ) {
+		if (size_ + 1 > N) {
+			pop_front();
+		}
+		new (&array_[(front_ + size_) % N]) NodeListEntry(v);
+		++size_;
+	}
 
-  void pop_front() {
-  	if (size_ < 1) {
-  	  throw;
-  	}
+	void pop_front() {
+		if (size_ < 1) {
+			throw;
+		}
 
-  	front().~NodeListEntry();
-  	++front_;
-  	--size_;
-  	if (front_ >= N)
-  	  front_ = 0;
-  }
+		front().~NodeListEntry();
+		++front_;
+		--size_;
+		if (front_ >= N)
+			front_ = 0;
+	}
 
-  const_reference front() const {
-  	return array_[front_];
-  }
+	const_reference front() const {
+		return array_[front_];
+	}
 
-  reference front() {
-  	return array_[front_];
-  }
+	reference front() {
+		return array_[front_];
+	}
 
-  size_type size() const {
-    return size_;
-  }
+	size_type size() const {
+		return size_;
+	}
 
-  bool empty() const {
-	 return (size() == 0);
-  }
+	bool empty() const {
+		return (size() == 0);
+	}
 
-  const_reference operator[]( size_t n ) const {
-  	return array_[(front_+n)%N];
-  }
+	const_reference operator[]( size_t n ) const {
+		return array_[(front_+n)%N];
+	}
 
-  reference operator[]( size_t n ) {
-  	return array_[(front_+n)%N];
-  }
+	reference operator[]( size_t n ) {
+		return array_[(front_+n)%N];
+	}
 
-  reference at( size_t pos ) {
-	  if (pos >= size()) {
-		  throw std::out_of_range("out of range");
-	  }
-	  return array_[(front_+pos)%N];
-  }
+	reference at( size_t pos ) {
+		if (pos >= size()) {
+			throw std::out_of_range("out of range");
+		}
+		return array_[(front_+pos)%N];
+	}
 
-  const_reference at( size_t pos ) const {
-	  if (pos >= size()) {
-		  throw std::out_of_range("out of range");
-	  }
-	  return array_[(front_+pos)%N];
-  }
+	const_reference at( size_t pos ) const {
+		if (pos >= size()) {
+			throw std::out_of_range("out of range");
+		}
+		return array_[(front_+pos)%N];
+	}
 
-  iterator begin() {
-	  return iterator(this,0);
-  }
+	iterator begin() {
+		return iterator(this,0);
+	}
 
-  iterator end() {
-	  return iterator(this,size_);
-  }
+	iterator end() {
+		return iterator(this,size_);
+	}
 
- private:
-  size_type front_ = 0;
-  size_type size_ = 0;
-  std::array<NodeListEntry, N> array_;
+private:
+	size_type front_ = 0;
+	size_type size_ = 0;
+	std::array<NodeListEntry, N> array_;
 };
 
 } // namespace

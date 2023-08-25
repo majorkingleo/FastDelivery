@@ -1,8 +1,6 @@
-/*
- * main.cc
- *
- *  Created on: 01.07.2023
- *      Author: martin
+/**
+ * FastDelivery example and test file
+ * @author Copyright (c) 2023 Martin Oberzalek
  */
 #include <iostream>
 #include <mutex>
